@@ -108,7 +108,8 @@ def test_loop_runs_logs_and_rejects(tmp_path, corpus):
            Proposal("tfidf", ("wrong_section", "partial_span"), {"retrieval": {"method": "tfidf"}}, "fixture: tfidf")]
     log = tmp_path / "log.jsonl"
     loop = ImprovementLoop(loop_cfg(), log_file=log, catalogue=cat, log=lambda s: None,
-                           data_loader=lambda: (corpus, fixture_queries(), _unans()))
+                           data_loader=lambda: (corpus, fixture_queries(), _unans()),
+                           results_dir=tmp_path / "results", candidate_dir=tmp_path / "configs")
     res = loop.run(iterations=5, final_path=tmp_path / "final.yaml")
     entries = [json.loads(line) for line in log.read_text(encoding="utf-8").splitlines()]
     assert entries[0]["kind"] == "baseline"

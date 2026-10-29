@@ -16,7 +16,7 @@ from typing import Callable, Dict, List, Optional
 
 from ..config import PipelineConfig, apply_patch, save_config
 from ..evaluation.evaluator import evaluate, save_result
-from ..paths import CONFIG_DIR, EXPERIMENTS_DIR
+from ..paths import CONFIG_DIR, EXPERIMENTS_DIR, RESULTS_DIR
 from ..pipeline import Engine
 from .objective import Objective, judge
 from .proposer import CATALOGUE, Proposal, inapplicable, propose
@@ -55,11 +55,13 @@ def metrics_snapshot(summary: Dict, k: int) -> Dict:
 class ImprovementLoop:
     def __init__(self, start: PipelineConfig, log_file: Path = LOG_FILE, objective: Objective = Objective(),
                  catalogue: List[Proposal] = CATALOGUE, log: Callable[[str], None] = print,
-                 data_loader: Callable = _train_data):
+                 data_loader: Callable = _train_data, results_dir: Path = RESULTS_DIR,
+                 candidate_dir: Path = CANDIDATE_DIR):
         self.objective = objective
         self.catalogue = catalogue
         self.log_file = log_file
         self.say = log
+        self.results_dir, self.candidate_dir = results_dir, candidate_dir
         self.corpus, self.train_q, self.train_u = data_loader()
         assert all(q.split == "train" for q in self.train_q) and all(q.split == "train" for q in self.train_u)
         self.parent_cfg = reset_thresholds(start)
@@ -83,7 +85,7 @@ class ImprovementLoop:
         self.say(f"[baseline] evaluating {self.parent_cfg.name} on train ({len(self.train_q)} answerable, "
                  f"{len(self.train_u)} unanswerable)")
         parent = self._evaluate(self.parent_cfg)
-        save_result(parent, f"loop_iter00_{self.parent_cfg.name}")
+        save_result(parent, f"loop_iter00_{self.parent_cfg.name}", self.results_dir)
         self._write({"iteration": 0, "timestamp": now(), "kind": "baseline", "config_name": self.parent_cfg.name,
                      "config_fingerprint": parent["config"].fingerprint(), "config": parent["config"].to_dict(),
                      "objective": self.objective.to_dict(), "metrics": metrics_snapshot(parent["summary"], k),
@@ -115,8 +117,8 @@ class ImprovementLoop:
             self.say(f"[iter {it}] {p.pid} (targets {prop['category']}, {prop['count']} train failures)")
             cand = self._evaluate(cand_cfg)
             verdict = judge(parent, cand, self.budget, self.objective)
-            save_result(cand, f"loop_iter{it:02d}_{p.pid}")
-            save_config(cand["config"], CANDIDATE_DIR / f"iter{it:02d}_{p.pid}.yaml",
+            save_result(cand, f"loop_iter{it:02d}_{p.pid}", self.results_dir)
+            save_config(cand["config"], self.candidate_dir / f"iter{it:02d}_{p.pid}.yaml",
                         header=f"Loop iteration {it}: {p.pid} -> {verdict['decision']}")
             entry = {
                 "iteration": it, "timestamp": now(), "kind": "candidate", "proposal_id": p.pid,
