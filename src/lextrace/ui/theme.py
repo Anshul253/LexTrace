@@ -51,6 +51,18 @@ mark.cl-hit { background: #d6efef; color: var(--cl-ink); padding: 1px 0; border-
 .cl-chip { display: inline-block; border: 1px solid var(--cl-line); background: var(--cl-surface); border-radius: 999px;
   padding: 2px 10px; font-size: 12px; margin: 0 6px 6px 0; color: var(--cl-navy-700); }
 .cl-note { font-size: 12px; color: var(--cl-muted); }
+.cl-card.weak { border-style: dashed; opacity: 0.85; }
+.cl-type { background: var(--cl-teal-50); color: var(--cl-teal-600); border: 1px solid #b5dfe0; border-radius: 4px;
+  padding: 1px 8px; font-size: 12px; font-weight: 600; }
+.cl-card .cl-meta { margin-bottom: 8px; }
+mark.cl-find { background: #fde7b0; color: var(--cl-ink); padding: 1px 0; border-bottom: 2px solid var(--cl-amber-600); }
+.cl-doc.tall { max-height: 720px; }
+.cl-tile { background: var(--cl-surface); border: 1px solid var(--cl-line); border-radius: var(--cl-radius);
+  padding: 14px 16px; border-top: 3px solid var(--cl-teal-500); margin-bottom: 12px; min-height: 108px; }
+.cl-tile-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--cl-muted); }
+.cl-tile-value { font-size: 28px; font-weight: 700; color: var(--cl-navy-900); line-height: 1.3; }
+.cl-tile-note { font-size: 12px; color: var(--cl-muted); }
+.cl-steps { padding-left: 20px; font-size: 14px; line-height: 1.7; } .cl-steps b { color: var(--cl-navy-700); }
 @media (max-width: 640px) {
   .cl-card { padding: 12px 14px; } .cl-excerpt { font-size: 13px; } h1 { font-size: 24px !important; }
 }

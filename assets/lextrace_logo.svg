@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="220" height="40" viewBox="0 0 220 40">
   <circle cx="16" cy="18" r="10" fill="none" stroke="#149a9e" stroke-width="3"/>
   <line x1="23" y1="25" x2="31" y2="33" stroke="#149a9e" stroke-width="3" stroke-linecap="round"/>
-  <rect x="11" y="14" width="10" height="2" fill="#dbe6f0"/><rect x="11" y="19" width="7" height="2" fill="#dbe6f0"/>
-  <text x="42" y="25" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">Lex<tspan fill="#149a9e">Trace</tspan></text>
+  <rect x="11" y="14" width="10" height="2" fill="#4fb3b6"/><rect x="11" y="19" width="7" height="2" fill="#4fb3b6"/>
+  <text x="42" y="25" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="20" font-weight="700" fill="#4fb3b6">Lex<tspan fill="#149a9e">Trace</tspan></text>
 </svg>
