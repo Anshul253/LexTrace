@@ -1,0 +1,600 @@
+{
+  "version": 1,
+  "description": "Hand-written unanswerable queries for the ClauseLens CUAD-mini corpus. Frozen; see unanswerable_queries.sha256.",
+  "queries": [
+    {
+      "query_id": "unans-001",
+      "query": "Consider the Amendment No. 3 to Wireless Content License Agreement between Fox Mobile Entertainment, Inc. and Glu Mobile Inc.; Does this contract allow the licensee to sublicense the licensed content to a third-party streaming platform?",
+      "label": "unanswerable",
+      "category": "absent_clause",
+      "target_doc_id": "cuad/GluMobileInc_20070319_S-1A_EX-10.09_436630_EX-10.09_Content License Agreement4.txt",
+      "rationale": "The three-paragraph amendment only extends the term and updates a notice address; it contains no licensing grant or sublicensing language.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "sub-?licen",
+          "stream"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-002",
+      "query": "Consider the Amendment No. 3 to Wireless Content License Agreement between Fox Mobile Entertainment, Inc. and Glu Mobile Inc.; Who owns the intellectual property in derivative works created from the licensed content?",
+      "label": "unanswerable",
+      "category": "absent_clause",
+      "target_doc_id": "cuad/GluMobileInc_20070319_S-1A_EX-10.09_436630_EX-10.09_Content License Agreement4.txt",
+      "rationale": "The amendment has no ownership or derivative-works provision.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "derivative",
+          "intellectual property",
+          "own(s|ed|ership)"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-003",
+      "query": "Consider the Amendment No. 3 to Wireless Content License Agreement between Fox Mobile Entertainment, Inc. and Glu Mobile Inc.; What liquidated damages are payable if a party breaches this agreement?",
+      "label": "unanswerable",
+      "category": "absent_clause",
+      "target_doc_id": "cuad/GluMobileInc_20070319_S-1A_EX-10.09_436630_EX-10.09_Content License Agreement4.txt",
+      "rationale": "No damages or remedies language in the amendment.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "liquidated",
+          "damages"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-004",
+      "query": "Consider the Sponsorship Agreement between R. C. Boyd Enterprises, LLC and Cano Petroleum, Inc. for 'Honey Hole'; Does the sponsor have a right of first refusal over future seasons of the show?",
+      "label": "unanswerable",
+      "category": "absent_clause",
+      "target_doc_id": "cuad/CANOPETROLEUM,INC_12_13_2007-EX-10.1-Sponsorship Agreement.txt",
+      "rationale": "Fixed one-year term (the Term and Renewal heading states only dates); the only option in the text is the Company's option to cancel for non-payment. No first-refusal right.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "first refusal",
+          "right of first",
+          "future season"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-005",
+      "query": "Consider the Sponsorship Agreement between R. C. Boyd Enterprises, LLC and Cano Petroleum, Inc. for 'Honey Hole'; Is the sponsor's software source code held in escrow under this agreement?",
+      "label": "unanswerable",
+      "category": "absent_clause",
+      "target_doc_id": "cuad/CANOPETROLEUM,INC_12_13_2007-EX-10.1-Sponsorship Agreement.txt",
+      "rationale": "A TV-show sponsorship; no software or escrow terms.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "escrow",
+          "source code"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-006",
+      "query": "Consider the Gas Franchise Agreement between the Town of Vinton and Roanoke Gas Company; Does this agreement contain a non-compete clause restricting Roanoke Gas Company from competing?",
+      "label": "unanswerable",
+      "category": "absent_clause",
+      "target_doc_id": "cuad/RgcResourcesInc_20151216_8-K_EX-10.3_9372751_EX-10.3_Franchise Agreement.txt",
+      "rationale": "The franchise grants the right to use streets; it has no competition restriction.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "compet"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-007",
+      "query": "Consider the Gas Franchise Agreement between the Town of Vinton and Roanoke Gas Company; What insurance coverage must Roanoke Gas Company maintain under this agreement?",
+      "label": "unanswerable",
+      "category": "absent_clause",
+      "target_doc_id": "cuad/RgcResourcesInc_20151216_8-K_EX-10.3_9372751_EX-10.3_Franchise Agreement.txt",
+      "rationale": "The franchise agreement text has no insurance requirement (it incorporates a town ordinance by reference, which is not in the corpus).",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "insur"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-008",
+      "query": "Consider the Amendment and Termination of Joint Venture Agreement between Veoneer and Nissin Parties; Does this agreement grant exclusive distribution rights in India?",
+      "label": "unanswerable",
+      "category": "absent_clause",
+      "target_doc_id": "cuad/VEONEER,INC_02_21_2020-EX-10.11-JOINT VENTURE AGREEMENT.txt",
+      "rationale": "The amendment terminates a JV; it grants no distribution rights and does not mention India.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "india",
+          "exclusiv",
+          "distribut"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-009",
+      "query": "Consider the Amendment and Termination of Joint Venture Agreement between Veoneer and Nissin Parties; Is there a most favored nation clause in this contract?",
+      "label": "unanswerable",
+      "category": "absent_clause",
+      "target_doc_id": "cuad/VEONEER,INC_02_21_2020-EX-10.11-JOINT VENTURE AGREEMENT.txt",
+      "rationale": "No pricing or MFN terms.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "most favou?red",
+          "favou?rable"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-010",
+      "query": "Consider the Agency Agreement between General Electric Capital Corporation and Duckwall-Alco Stores, Inc. for Equipment Leasing; Does this agreement contain a non-disparagement clause?",
+      "label": "unanswerable",
+      "category": "absent_clause",
+      "target_doc_id": "cuad/ALCOSTORESINC_12_14_2005-EX-10.26-AGENCY AGREEMENT.txt",
+      "rationale": "No non-disparagement provision in the agency agreement.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "disparag"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-011",
+      "query": "Consider the Agency Agreement between General Electric Capital Corporation and Duckwall-Alco Stores, Inc. for Equipment Leasing; Is there a non-solicitation clause covering either party's employees?",
+      "label": "unanswerable",
+      "category": "absent_clause",
+      "target_doc_id": "cuad/ALCOSTORESINC_12_14_2005-EX-10.26-AGENCY AGREEMENT.txt",
+      "rationale": "No solicitation restriction.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "solicit"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-012",
+      "query": "Consider the Business Affiliate Agreement between Dr. George D. Green and UNION DENTAL CORP.; Does this agreement have a change of control provision?",
+      "label": "unanswerable",
+      "category": "absent_clause",
+      "target_doc_id": "cuad/UnionDentalHoldingsInc_20050204_8-KA_EX-10_3345577_EX-10_Affiliate Agreement.txt",
+      "rationale": "No change-of-control language in the affiliate agreement.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "change (of|in) control",
+          "merger",
+          "acqui"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-013",
+      "query": "Consider the Business Affiliate Agreement between Dr. George D. Green and UNION DENTAL CORP.; Does either party receive a license to use the other party's trademarks?",
+      "label": "unanswerable",
+      "category": "absent_clause",
+      "target_doc_id": "cuad/UnionDentalHoldingsInc_20050204_8-KA_EX-10_3345577_EX-10_Affiliate Agreement.txt",
+      "rationale": "No trademark or licence grant in the affiliate agreement.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "trademark",
+          "licen",
+          "\\bmarks?\\b"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-014",
+      "query": "Consider the Endorsement Agreement between Holiday RV Superstores, Inc. and Affinity Group, Inc. for Good Sam Branding; What liquidated damages apply if Holiday RV terminates early?",
+      "label": "unanswerable",
+      "category": "absent_clause",
+      "target_doc_id": "cuad/HOLIDAYRVSUPERSTORESINC_04_15_2002-EX-10.13-ENDORSEMENT AGREEMENT.txt",
+      "rationale": "The endorsement agreement does not provide for liquidated damages.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "liquidated"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-015",
+      "query": "Consider the Endorsement Agreement between Holiday RV Superstores, Inc. and Affinity Group, Inc. for Good Sam Branding; Is there a source code escrow arrangement in this contract?",
+      "label": "unanswerable",
+      "category": "absent_clause",
+      "target_doc_id": "cuad/HOLIDAYRVSUPERSTORESINC_04_15_2002-EX-10.13-ENDORSEMENT AGREEMENT.txt",
+      "rationale": "Branding endorsement; no software terms.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "escrow",
+          "source code"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-016",
+      "query": "Consider the Non-Competition Agreement and Right of First Offer between Glamis Gold Ltd. and Western Copper Corporation; What royalty or revenue share does Western Copper pay Glamis Gold?",
+      "label": "unanswerable",
+      "category": "absent_clause",
+      "target_doc_id": "cuad/WESTERN COPPER - NON-COMPETITION AGREEMENT.txt",
+      "rationale": "Non-competition / first-offer agreement with no payment-sharing terms.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "royalt",
+          "revenue",
+          "profit"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-017",
+      "query": "Consider the Non-Competition Agreement and Right of First Offer between Glamis Gold Ltd. and Western Copper Corporation; What insurance must the parties carry under this agreement?",
+      "label": "unanswerable",
+      "category": "absent_clause",
+      "target_doc_id": "cuad/WESTERN COPPER - NON-COMPETITION AGREEMENT.txt",
+      "rationale": "No insurance clause.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "insur"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-018",
+      "query": "Consider the Sponsorship Agreement between Jacksonville Jaguars, LLC and The ARC Group, Inc.; Can the sponsor sublicense the Jaguars marks to a third-party streaming platform?",
+      "label": "unanswerable",
+      "category": "absent_clause",
+      "target_doc_id": "cuad/ArcGroupInc_20171211_8-K_EX-10.1_10976103_EX-10.1_Sponsorship Agreement.txt",
+      "rationale": "The sponsorship grants limited use of marks; no sublicensing or streaming terms.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "sub-?licen",
+          "stream"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-019",
+      "query": "Consider the Supply Agreement between Florida Chemical Company, LLC and Flotek Chemistry, LLC for Terpene Products; Is there a non-disparagement clause in this supply agreement?",
+      "label": "unanswerable",
+      "category": "absent_clause",
+      "target_doc_id": "cuad/FLOTEKINDUSTRIESINCCN_05_09_2019-EX-10.1-SUPPLY AGREEMENT.txt",
+      "rationale": "No non-disparagement provision.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "disparag"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-020",
+      "query": "Consider the Cooperation Agreement between HPIL ENERGYTECH Inc. and GINARES GROUP AG for Renewable Energy Projects; What insurance coverage is required under this cooperation agreement?",
+      "label": "unanswerable",
+      "category": "absent_clause",
+      "target_doc_id": "cuad/HPILHOLDING_01_07_2015-EX-99.1-COOPERATION AGREEMENT.txt",
+      "rationale": "No insurance clause.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "insur"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-021",
+      "query": "Consider the Walabot HOME Reseller Agreement between Vayyar Imaging Ltd. and Inde Living Holdings, Inc.; Is there a source code escrow for the Walabot software?",
+      "label": "unanswerable",
+      "category": "absent_clause",
+      "target_doc_id": "cuad/HealthcareIntegratedTechnologiesInc_20190812_8-K_EX-10.1_11776966_EX-10.1_Reseller Agreement.txt",
+      "rationale": "Reseller agreement without escrow terms.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "escrow",
+          "source code"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-022",
+      "query": "Consider the Co-Branding Agreement between PC Quote, Inc. and A.B. Watley, Inc. for Market Data Software; What liquidated damages apply on breach of this co-branding agreement?",
+      "label": "unanswerable",
+      "category": "absent_clause",
+      "target_doc_id": "cuad/PcquoteComInc_19990721_S-1A_EX-10.11_6377149_EX-10.11_Co-Branding Agreement1.txt",
+      "rationale": "No liquidated damages clause.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "liquidated"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-023",
+      "query": "Consider the Joint Venture Agreement between MJ Syndicated, Inc. and Simply Herbals for Manufacturing and Selling Health-Related Products; Is there a most favored nation pricing clause?",
+      "label": "unanswerable",
+      "category": "absent_clause",
+      "target_doc_id": "cuad/MJBIOTECH,INC_12_06_2018-EX-99.01-JOINT VENTURE AGREEMENT.txt",
+      "rationale": "No MFN terms in the JV agreement.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "most favou?red",
+          "favou?rable"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-024",
+      "query": "Consider the Co-Branding and Services Agreement between RSL COM PrimeCall, Inc. and deltathree.com, Inc.; Does this agreement include a non-disparagement clause?",
+      "label": "unanswerable",
+      "category": "absent_clause",
+      "target_doc_id": "cuad/DeltathreeInc_19991102_S-1A_EX-10.19_6227850_EX-10.19_Co-Branding Agreement_ Service Agreement.txt",
+      "rationale": "No non-disparagement provision.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "disparag"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-025",
+      "query": "Consider the Marketing Agreement between Loop Industries, Inc. and Indorama Loop Technologies, LLC for Product Supply and Development; Is there a source code escrow arrangement?",
+      "label": "unanswerable",
+      "category": "absent_clause",
+      "target_doc_id": "cuad/Loop Industries, Inc. - Marketing Agreement.txt",
+      "rationale": "Supply/marketing agreement for resin; no software escrow.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "escrow",
+          "source code"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-026",
+      "query": "Consider the Service Agreement between BicycleTX Ltd and Nigel Crockett for Chief Business Officer Position; Can the company sublicense content created by the executive to a third-party platform?",
+      "label": "unanswerable",
+      "category": "absent_clause",
+      "target_doc_id": "cuad/BICYCLETHERAPEUTICSPLC_03_10_2020-EX-10.11-SERVICE AGREEMENT.txt",
+      "rationale": "Employment service agreement; no sublicensing terms.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "sub-?licen",
+          "platform"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-027",
+      "query": "Consider the Content License Agreement between Star Horizon Media Private Limited and Northwind Pictures LLC; Does this agreement allow sublicensing to third-party OTT platforms?",
+      "label": "unanswerable",
+      "category": "contract_not_in_corpus",
+      "target_doc_id": null,
+      "rationale": "The named agreement/parties do not appear in any indexed contract (checked across the whole corpus).",
+      "absence_check": {
+        "scope": "corpus",
+        "patterns": [
+          "northwind",
+          "star horizon"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-028",
+      "query": "Consider the Film Distribution Agreement between Bluewave Media Ltd. and Harbor Lane Films; When does the exclusivity period end?",
+      "label": "unanswerable",
+      "category": "contract_not_in_corpus",
+      "target_doc_id": null,
+      "rationale": "The named agreement/parties do not appear in any indexed contract (checked across the whole corpus).",
+      "absence_check": {
+        "scope": "corpus",
+        "patterns": [
+          "bluewave",
+          "harbor lane"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-029",
+      "query": "Consider the Co-Production Agreement between Meridian Studios Inc. and Saffron Hills Entertainment; Who owns the IP in derivative works?",
+      "label": "unanswerable",
+      "category": "contract_not_in_corpus",
+      "target_doc_id": null,
+      "rationale": "The named agreement/parties do not appear in any indexed contract (checked across the whole corpus).",
+      "absence_check": {
+        "scope": "corpus",
+        "patterns": [
+          "meridian studios",
+          "saffron hills"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-030",
+      "query": "Consider the Music Synchronization License between Aurora Records and Tidepool Games Inc.; What is the license fee?",
+      "label": "unanswerable",
+      "category": "contract_not_in_corpus",
+      "target_doc_id": null,
+      "rationale": "The named agreement/parties do not appear in any indexed contract (checked across the whole corpus).",
+      "absence_check": {
+        "scope": "corpus",
+        "patterns": [
+          "aurora records",
+          "tidepool"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-031",
+      "query": "Consider the Sponsorship Agreement between Kestrel Sports League and Ironleaf Beverages Corp.; Is there an anti-assignment clause?",
+      "label": "unanswerable",
+      "category": "contract_not_in_corpus",
+      "target_doc_id": null,
+      "rationale": "The named agreement/parties do not appear in any indexed contract (checked across the whole corpus).",
+      "absence_check": {
+        "scope": "corpus",
+        "patterns": [
+          "kestrel",
+          "ironleaf"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-032",
+      "query": "Does our broadcast rights agreement with the national cricket board allow highlight clips on social media?",
+      "label": "unanswerable",
+      "category": "contract_not_in_corpus",
+      "target_doc_id": null,
+      "rationale": "The named agreement/parties do not appear in any indexed contract (checked across the whole corpus).",
+      "absence_check": {
+        "scope": "corpus",
+        "patterns": [
+          "cricket"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-033",
+      "query": "What is the governing law of the 2021 streaming licence between Halcyon Digital and Orbit TV?",
+      "label": "unanswerable",
+      "category": "contract_not_in_corpus",
+      "target_doc_id": null,
+      "rationale": "The named agreement/parties do not appear in any indexed contract (checked across the whole corpus).",
+      "absence_check": {
+        "scope": "corpus",
+        "patterns": [
+          "halcyon",
+          "orbit tv"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-034",
+      "query": "Consider the Talent Agreement between Lumen Talkies and Priya Raman; How many episodes must the host record each season?",
+      "label": "unanswerable",
+      "category": "contract_not_in_corpus",
+      "target_doc_id": null,
+      "rationale": "The named agreement/parties do not appear in any indexed contract (checked across the whole corpus).",
+      "absence_check": {
+        "scope": "corpus",
+        "patterns": [
+          "lumen talkies",
+          "priya raman"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-035",
+      "query": "Consider the Endorsement Agreement between ABG-Shaq, LLC and Papa John's International, Inc.; How many pizzas did the Shaquille O'Neal promotion sell during 2020?",
+      "label": "unanswerable",
+      "category": "out_of_scope",
+      "target_doc_id": "cuad/PapaJohnsInternationalInc_20190617_8-K_EX-10.1_11707365_EX-10.1_Endorsement Agreement.txt",
+      "rationale": "Sales results occur after signing and are not contract terms.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "pizzas sold",
+          "units sold"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-036",
+      "query": "Consider the Gas Franchise Agreement between the Town of Vinton and Roanoke Gas Company; What was Roanoke Gas Company's annual revenue in 2016?",
+      "label": "unanswerable",
+      "category": "out_of_scope",
+      "target_doc_id": "cuad/RgcResourcesInc_20151216_8-K_EX-10.3_9372751_EX-10.3_Franchise Agreement.txt",
+      "rationale": "Company financial results are not in the franchise agreement.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "annual revenue"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-037",
+      "query": "Consider the Joint Venture Agreement between Tate & Lyle Fermentation Products Ltd. and Igene Biotechnology, Inc. for Astaxanthin Production; What is Igene Biotechnology's current share price?",
+      "label": "unanswerable",
+      "category": "out_of_scope",
+      "target_doc_id": "cuad/IGENEBIOTECHNOLOGYINC_05_13_2003-EX-1-JOINT VENTURE AGREEMENT.txt",
+      "rationale": "Market data is not part of a contract.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "share price",
+          "stock price"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-038",
+      "query": "Consider the Sponsorship Agreement between Jacksonville Jaguars, LLC and The ARC Group, Inc.; How many games did the Jacksonville Jaguars win in the 2018 season?",
+      "label": "unanswerable",
+      "category": "out_of_scope",
+      "target_doc_id": "cuad/ArcGroupInc_20171211_8-K_EX-10.1_10976103_EX-10.1_Sponsorship Agreement.txt",
+      "rationale": "Sports results are not contract terms.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "games won",
+          "win-loss"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-039",
+      "query": "Consider the Service Agreement between Theravance Biopharma UK Limited and Brett Haumann; What performance rating did Brett Haumann receive in his last annual review?",
+      "label": "unanswerable",
+      "category": "out_of_scope",
+      "target_doc_id": "cuad/THERAVANCEBIOPHARMA,INC_05_08_2020-EX-10.2-SERVICE AGREEMENT.txt",
+      "rationale": "Individual performance reviews are not in the service agreement.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "performance rating",
+          "annual review"
+        ]
+      }
+    },
+    {
+      "query_id": "unans-040",
+      "query": "Consider the Marketing Agreement between Loop Industries, Inc. and Indorama Loop Technologies, LLC for Product Supply and Development; How many tonnes of PET resin did Indorama actually deliver in 2019?",
+      "label": "unanswerable",
+      "category": "out_of_scope",
+      "target_doc_id": "cuad/Loop Industries, Inc. - Marketing Agreement.txt",
+      "rationale": "Actual delivery volumes are operational data, not contract text.",
+      "absence_check": {
+        "scope": "target_doc",
+        "patterns": [
+          "tonnes",
+          "delivered in 2019"
+        ]
+      }
+    }
+  ]
+}

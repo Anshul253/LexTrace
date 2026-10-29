@@ -1,0 +1,4 @@
+* text=auto eol=lf
+# hashed byte-for-byte: never convert line endings
+data/unanswerable_queries.json -text
+data/unanswerable_queries.sha256 -text
