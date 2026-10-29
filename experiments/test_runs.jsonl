@@ -1,0 +1,2 @@
+{"time": "2026-10-29T18:15:26+00:00", "config_name": "baseline_calibrated", "config_fingerprint": "cc8e096874e0", "note": "final reporting: baseline (thresholds fitted on train)", "recall_at_primary_k": 0.033880515284716126}
+{"time": "2026-10-29T18:16:29+00:00", "config_name": "final", "config_fingerprint": "230f79c4af99", "note": "final reporting: final config frozen in 0aecedb", "recall_at_primary_k": 0.5832627347030083}

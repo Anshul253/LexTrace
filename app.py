@@ -318,7 +318,7 @@ def page_overview() -> None:
             f = get(hm["final"]) if hm["final"] else None
             tile(col, label, fmt.format(f) if f is not None else "pending",
                  f"baseline {fmt.format(b)}" if b is not None else "baseline pending")
-        st.caption("Test-split numbers are reported in REPORT.md and on the Evaluation page once the final evaluation has run.")
+        st.caption("Held-out test-split numbers are on the Evaluation page (split: test) and in REPORT.md.")
 
     st.subheader("Agreement types in the corpus")
     counts = Counter(r["type"] for r in catalog)

@@ -76,7 +76,7 @@ python -m lextrace build-index --config final         # chunk + index (+ cache e
 python -m lextrace evaluate --split train --config final
 python -m lextrace analyze --config final             # error-analysis records -> experiments/error_analysis.json
 python -m lextrace compare --base final               # BM25 vs TF-IDF vs dense vs hybrid, train only
-python -m lextrace improve --start baseline --iterations 14   # self-improvement loop (train only)
+python -m lextrace improve --start baseline --iterations 16   # self-improvement loop (train only)
 python -m lextrace evaluate --split test --config final --confirm-final --note "final reporting"
 python -m lextrace tables                             # markdown tables from saved results
 python -m lextrace test                               # unit tests;  add --integration for dataset-backed tests
@@ -131,25 +131,25 @@ question ─► validate ─► parse "Consider the <contract>; <question>" ─�
 | `evaluation.ks / primary_k` | | metric cutoffs |
 
 ## Reproducing the reported results
-From a fresh clone with the dataset prepared (times on a 2020s laptop CPU):
+From a fresh clone with the dataset prepared (measured times on the development laptop, CPU only):
 
 | Step | Command | Time |
 |---|---|---|
-| validate data | `python -m lextrace validate` | ~5 s |
-| baseline train metrics | `python -m lextrace evaluate --split train --config baseline` | ~10 s |
-| improvement loop → `configs/final.yaml`, `experiments/experiment_log.jsonl` | `python -m lextrace improve --start baseline --iterations 14` | ~15–25 min (first run downloads models) |
-| final train metrics | `python -m lextrace evaluate --split train --config final` | ~1 min |
-| method comparison | `python -m lextrace compare --base final` | ~5 min |
-| error analysis | `python -m lextrace analyze --config final` | ~1 min |
-| held-out test (final reporting only) | `python -m lextrace evaluate --split test --config baseline --confirm-final` and `… --config final --confirm-final` | ~1 min |
+| validate data | `python -m lextrace validate` | ~10 s |
+| baseline train metrics + calibrated copy | `python -m lextrace evaluate --split train --config baseline --save-calibrated` | ~10 s |
+| improvement loop → `configs/final.yaml`, `experiments/experiment_log.jsonl` | `python -m lextrace improve --start baseline --iterations 16` | ~30 min (first run also downloads ~300 MB of models) |
+| final train metrics | `python -m lextrace evaluate --split train --config final` | ~4 min |
+| error analysis | `python -m lextrace analyze --config final` | ~4 min |
+| method comparison | `python -m lextrace compare --base final` | ~6 min |
+| held-out test, baseline (final reporting only) | `python -m lextrace evaluate --split test --config baseline_calibrated --tag baseline --confirm-final` | ~5 s |
+| held-out test, final (final reporting only) | `python -m lextrace evaluate --split test --config final --confirm-final` | ~1.5 min |
 | tables for the report | `python -m lextrace tables` | instant |
 
-`baseline.yaml` has uncalibrated thresholds (`null`); `evaluate --split train --config baseline --save-calibrated`
-calibrates them on train and writes `configs/baseline_calibrated.yaml`, which is the file used for the baseline's
-test evaluation (test evaluation refuses uncalibrated configs, so it can never fit anything on test). The exact
-command sequence used for the report is in REPORT.md §5. Everything is deterministic on CPU; dense scores can differ
-in the last decimals across hardware/library versions.
-
+`baseline.yaml` has uncalibrated thresholds (`null`); `--save-calibrated` fits them on train and writes
+`configs/baseline_calibrated.yaml`, the file used for the baseline's test evaluation (test evaluation refuses
+uncalibrated configs, so nothing can be fitted on test). Each test run appends to `experiments/test_runs.jsonl`.
+Everything is deterministic on CPU; dense and cross-encoder scores can differ in the last decimals across hardware or
+library versions. Re-running `improve` overwrites `configs/final.yaml` and the log with an identical result.
 ## Testing
 ```bash
 python -m pytest -q                     # unit tests: synthetic fixtures, no download, no model (~10 s)
