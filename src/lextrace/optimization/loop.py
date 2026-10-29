@@ -12,7 +12,7 @@ from __future__ import annotations
 import json
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Callable, Dict, List, Optional
+from typing import Callable, Dict, List, Optional, Set
 
 from ..config import PipelineConfig, apply_patch, save_config
 from ..evaluation.evaluator import evaluate, save_result
@@ -35,6 +35,33 @@ def reset_thresholds(cfg: PipelineConfig) -> PipelineConfig:
     for g in cfg.abstention.gates:
         g.threshold = None
     return cfg
+
+
+RANK_BASED = "rank-1 score is fusion/normalisation-scaled and nearly constant across queries"
+
+
+def stabilize_gates(parent: PipelineConfig, cand: PipelineConfig) -> Optional[str]:
+    """`top_score` is only a meaningful confidence for single-retriever pipelines without reranking with weight < 1:
+    RRF and min-max fusion put the rank-1 score near a constant. When a candidate moves to such a pipeline, swap a
+    `top_score` gate for the absolute-scale signal of a retriever it still uses (dense cosine, else normalised BM25).
+    Returns a note for the log, or None when nothing changed."""
+    r = cand.retrieval
+    fused = r.method == "hybrid" or (cand.rerank.enabled and cand.rerank.weight < 1.0)
+    if not fused:
+        return None
+    comps = set(r.hybrid.components) if r.method == "hybrid" else {r.method}
+    repl = "dense_top_cosine" if "dense" in comps else "bm25_norm"
+    changed = False
+    for g in cand.abstention.gates:
+        if g.signal == "top_score":
+            g.signal, g.threshold, changed = repl, None, True
+    return f"gate top_score -> {repl} ({RANK_BASED})" if changed else None
+
+
+def blocked_only_by_abstention(verdict: Dict, obj: Objective) -> bool:
+    g = verdict["guardrails"]
+    return (verdict["delta_primary"] >= obj.min_gain and verdict["p_gain"] >= obj.min_p_gain
+            and not g["G3_correct_abstention"] and all(v for n, v in g.items() if n != "G3_correct_abstention"))
 
 
 def metrics_snapshot(summary: Dict, k: int) -> Dict:
@@ -94,6 +121,8 @@ class ImprovementLoop:
                  f"failures={parent['summary']['failure_counts']}")
         tried: List[str] = []
         accepted: List[str] = []
+        deferred: Set[str] = set()  # rejected only by G3 despite a retrieval gain
+        retried: Set[str] = set()
         it = 0
         while it < iterations:
             prop = propose(parent["summary"], tried, self.catalogue)
@@ -114,16 +143,23 @@ class ImprovementLoop:
                              "change": p.patch, "decision": "skipped", "explanation": why_noop})
                 continue
             it += 1
-            self.say(f"[iter {it}] {p.pid} (targets {prop['category']}, {prop['count']} train failures)")
+            gate_note = stabilize_gates(parent["config"], cand_cfg)
+            retry = p.pid in retried
+            self.say(f"[iter {it}] {p.pid}{' (retry)' if retry else ''} (targets {prop['category']}, "
+                     f"{prop['count']} train failures){' | ' + gate_note if gate_note else ''}")
             cand = self._evaluate(cand_cfg)
             verdict = judge(parent, cand, self.budget, self.objective)
             save_result(cand, f"loop_iter{it:02d}_{p.pid}", self.results_dir)
             save_config(cand["config"], self.candidate_dir / f"iter{it:02d}_{p.pid}.yaml",
                         header=f"Loop iteration {it}: {p.pid} -> {verdict['decision']}")
+            source = (f"rule catalogue (optimization/proposer.py); most frequent untreated train failure "
+                      f"category '{prop['category']}' ({prop['count']} queries)")
+            if retry:
+                source = ("retry rule: rejected earlier only by the abstention guardrail (G3) with a retrieval gain; "
+                          "re-proposed once after the abstention gate changed. " + source)
             entry = {
                 "iteration": it, "timestamp": now(), "kind": "candidate", "proposal_id": p.pid,
-                "proposal_source": f"rule catalogue (optimization/proposer.py); most frequent untreated train failure "
-                                   f"category '{prop['category']}' ({prop['count']} queries)",
+                "proposal_source": source, "retry": retry, "gate_adjustment": gate_note,
                 "change": p.patch, "reason": p.rationale,
                 "parent_config": parent["config"].name, "parent_fingerprint": parent["config"].fingerprint(),
                 "candidate_config": cand["config"].name, "candidate_fingerprint": cand["config"].fingerprint(),
@@ -138,6 +174,15 @@ class ImprovementLoop:
             if verdict["decision"] == "accepted":
                 accepted.append(p.pid)
                 parent = cand
+                if "abstention" in p.patch and deferred:
+                    # the gate changed: give retrieval gains that only the old gate blocked one more chance
+                    for pid in deferred:
+                        tried.remove(pid)
+                        retried.add(pid)
+                    self.say(f"  re-queued after gate change: {sorted(deferred)}")
+                    deferred.clear()
+            elif blocked_only_by_abstention(verdict, self.objective) and p.pid not in retried:
+                deferred.add(p.pid)
         best = parent["config"]
         best.name = "final"
         best.description = ("Selected by the train-only improvement loop; accepted changes: "

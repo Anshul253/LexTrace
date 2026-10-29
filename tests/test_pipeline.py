@@ -5,7 +5,7 @@ from lextrace.retrieval.router import ContractRouter, parse_query
 from lextrace.retrieval.text import light_stem, tokenize
 from lextrace.config import TokenizerConfig
 
-from .conftest import DOCS, small_config
+from .conftest import small_config
 
 A, B = "fx/alpha_beta_sponsorship.txt", "fx/gamma_delta_distribution.txt"
 

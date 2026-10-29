@@ -4,7 +4,7 @@ category that still has untried proposals and returns the first untried one for 
 no LLM is involved."""
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Dict, List, Optional, Sequence
 
 

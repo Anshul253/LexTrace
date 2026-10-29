@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import json
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 from ..paths import EXPERIMENTS_DIR, TEST_LEDGER
 from .evaluator import load_result

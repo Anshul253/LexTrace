@@ -5,7 +5,7 @@ never reach this module. Both interfaces (CLI, web app) and the evaluator call i
 from __future__ import annotations
 
 import time
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass
 from typing import Dict, List, Optional, Tuple
 
 import numpy as np
@@ -130,12 +130,18 @@ class Engine:
         head, tail = idx[: rc.top_n], idx[rc.top_n:]
         ce = np.asarray(self._reranker.predict([(question, self.chunks[i].text) for i in head], show_progress_bar=False),
                         dtype=float)
-        fs = np.array([first[i] for i in head], dtype=float)
-        norm = lambda x: (x - x.min()) / (x.max() - x.min()) if x.max() > x.min() else np.ones_like(x)  # noqa: E731
-        combined = rc.weight * norm(ce) + (1 - rc.weight) * norm(fs)
-        reranked = [(head[j], 1.0 + float(combined[j])) for j in np.argsort(-combined, kind="stable")]
-        # reranked scores are in [1, 2]; the tail keeps its first-stage order below them with score 0
-        return reranked + [(i, 0.0) for i in tail]
+        if rc.weight >= 1.0:
+            # pure cross-encoder ranking: keep the raw logits as scores so the rank-1 score stays an informative,
+            # query-dependent confidence signal (min-max normalising would make it a constant)
+            combined = ce
+        else:
+            fs = np.array([first[i] for i in head], dtype=float)
+            norm = lambda x: (x - x.min()) / (x.max() - x.min()) if x.max() > x.min() else np.ones_like(x)  # noqa: E731
+            combined = rc.weight * norm(ce) + (1 - rc.weight) * norm(fs)
+        reranked = [(head[j], float(combined[j])) for j in np.argsort(-combined, kind="stable")]
+        # the tail keeps its first-stage order strictly below every reranked item
+        floor = float(combined.min()) - 1.0
+        return reranked + [(i, floor - n * 1e-6) for n, i in enumerate(tail)]
 
     def _postprocess(self, ranked: List[Tuple[int, float]], limit: int) -> List[Passage]:
         pp = self.cfg.postprocess

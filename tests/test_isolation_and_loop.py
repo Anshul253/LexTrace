@@ -123,6 +123,35 @@ def test_loop_runs_logs_and_rejects(tmp_path, corpus):
     assert (tmp_path / "final.yaml").exists() and res["best"].name == "final"
 
 
+def test_gate_is_swapped_for_fused_pipelines():
+    from lextrace.config import apply_patch
+    from lextrace.optimization.loop import stabilize_gates
+
+    parent = small_config(retrieval={"method": "dense"})
+    hybrid = apply_patch(parent, {"retrieval": {"method": "hybrid", "hybrid": {"components": ["bm25", "dense"]}}})
+    note = stabilize_gates(parent, hybrid)
+    assert note and hybrid.abstention.gates[0].signal == "dense_top_cosine" and hybrid.abstention.gates[0].threshold is None
+    lexical = apply_patch(parent, {"retrieval": {"method": "hybrid", "hybrid": {"components": ["bm25", "tfidf"]}}})
+    stabilize_gates(parent, lexical)
+    assert lexical.abstention.gates[0].signal == "bm25_norm"
+    plain = apply_patch(parent, {"chunking": {"size": 300}})
+    assert stabilize_gates(parent, plain) is None and plain.abstention.gates[0].signal == "top_score"
+    ce_only = apply_patch(parent, {"rerank": {"enabled": True, "weight": 1.0}})
+    assert stabilize_gates(parent, ce_only) is None  # raw cross-encoder logits are a usable confidence
+
+
+def test_retry_rule_only_for_abstention_blocked_gains():
+    from lextrace.optimization.loop import blocked_only_by_abstention
+
+    parent = _fake([0.2] * 20, ca=10)
+    blocked = judge(parent, _fake([0.4] * 20, ca=5), 0.1)
+    assert blocked_only_by_abstention(blocked, Objective())
+    no_gain = judge(parent, _fake([0.2] * 20, ca=5), 0.1)
+    assert not blocked_only_by_abstention(no_gain, Objective())
+    precision_fail = judge(parent, _fake([0.4] * 20, ca=5, prec=0.01), 0.1)
+    assert not blocked_only_by_abstention(precision_fail, Objective())
+
+
 def test_loop_refuses_test_data(tmp_path, corpus):
     with pytest.raises(AssertionError):
         ImprovementLoop(loop_cfg(), log_file=tmp_path / "l.jsonl", log=lambda s: None,
