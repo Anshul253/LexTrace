@@ -1,9 +1,9 @@
 import pytest
 
-from clauselens.pipeline import Engine, InvalidQueryError
-from clauselens.retrieval.router import ContractRouter, parse_query
-from clauselens.retrieval.text import light_stem, tokenize
-from clauselens.config import TokenizerConfig
+from lextrace.pipeline import Engine, InvalidQueryError
+from lextrace.retrieval.router import ContractRouter, parse_query
+from lextrace.retrieval.text import light_stem, tokenize
+from lextrace.config import TokenizerConfig
 
 from .conftest import DOCS, small_config
 

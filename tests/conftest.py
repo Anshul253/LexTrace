@@ -3,9 +3,9 @@ from __future__ import annotations
 
 import pytest
 
-from clauselens.config import config_from_dict
-from clauselens.data.benchmark import BenchmarkQuery, GoldSpan
-from clauselens.data.corpus import Corpus
+from lextrace.config import config_from_dict
+from lextrace.data.benchmark import BenchmarkQuery, GoldSpan
+from lextrace.data.corpus import Corpus
 
 DOC_A = (
     "SPONSORSHIP AGREEMENT\n\nThis Sponsorship Agreement is made between Alpha Media Ltd. and Beta Drinks Inc.\n\n"

@@ -1,0 +1,32 @@
+[baseline] evaluating baseline on train (140 answerable, 29 unanswerable)
+  recall@4=0.036 failures={'wrong_section': 112, 'false_abstention': 14, 'partial_span': 12, 'hit': 2}
+[iter 1] route_hard (targets header_dominance, 121 train failures)
+  -> accepted: recall@4 0.036 -> 0.317 (+0.281, P(gain)=1.00); all guardrails pass
+[iter 2] dense_minilm (targets wrong_section, 70 train failures)
+  -> accepted: recall@4 0.317 -> 0.471 (+0.154, P(gain)=1.00); all guardrails pass
+[iter 3] hybrid_bm25_dense (targets wrong_section, 45 train failures)
+  -> rejected: recall@4 change -0.039 below +0.010; guardrail(s) failed: G1_precision, G3_correct_abstention
+[iter 4] expansion_lexicon (targets wrong_section, 45 train failures)
+  -> rejected: guardrail(s) failed: G3_correct_abstention
+[iter 5] rerank_cross_encoder (targets wrong_section, 45 train failures)
+  -> rejected: guardrail(s) failed: G3_correct_abstention
+[iter 6] tfidf (targets wrong_section, 45 train failures)
+  -> rejected: recall@4 change -0.125 below +0.010; guardrail(s) failed: G1_precision, G2_mrr, G3_correct_abstention
+[iter 7] stem_light (targets wrong_section, 45 train failures)
+  -> rejected: recall@4 change +0.000 below +0.010 and abstention gain +0 below +2
+[iter 8] dense_bge_small (targets wrong_section, 45 train failures)
+  -> rejected: gain +0.029 not reliable (P(gain)=0.77 < 0.9)
+[iter 9] hybrid_weight_lexical (targets wrong_section, 45 train failures)
+  -> rejected: recall@4 change +0.000 below +0.010 and abstention gain +0 below +2
+[iter 10] chunks_paragraph_800 (targets wrong_section, 45 train failures)
+  -> accepted: recall@4 0.471 -> 0.593 (+0.122, P(gain)=1.00); all guardrails pass
+[iter 11] chunks_clause_800 (targets wrong_section, 42 train failures)
+  -> rejected: recall@4 change +0.000 below +0.010 and abstention gain +0 below +2
+[iter 12] chunks_fixed_1000 (targets partial_span, 20 train failures)
+  -> rejected: recall@4 change -0.002 below +0.010 and abstention gain +0 below +2; guardrail(s) failed: G1_precision, G2_mrr
+[iter 13] expand_100 (targets partial_span, 20 train failures)
+  -> rejected: recall@4 change -0.073 below +0.010; guardrail(s) failed: G1_precision
+[iter 14] gate_bm25_norm (targets false_answer, 18 train failures)
+  -> accepted: retrieval unchanged (delta +0.000); correct abstentions 11 -> 13; guardrails pass
+best configuration -> E:\JioStar\lextrace\configs\final.yaml: accepted ['route_hard', 'dense_minilm', 'chunks_paragraph_800', 'gate_bm25_norm']
+done in 431s; accepted: ['route_hard', 'dense_minilm', 'chunks_paragraph_800', 'gate_bm25_norm']

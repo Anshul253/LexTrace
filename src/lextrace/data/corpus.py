@@ -48,7 +48,7 @@ class Corpus:
         if missing:
             raise MissingDocumentError(
                 f"{len(missing)} referenced contract(s) not found under {corpus_dir}, e.g. {missing[0]!r}. "
-                "Run `python -m clauselens prepare` to download them.")
+                "Run `python -m lextrace prepare` to download them.")
         return cls(texts)
 
     def text(self, doc_id: str) -> str:

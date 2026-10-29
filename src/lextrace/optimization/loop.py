@@ -19,7 +19,7 @@ from ..evaluation.evaluator import evaluate, save_result
 from ..paths import CONFIG_DIR, EXPERIMENTS_DIR
 from ..pipeline import Engine
 from .objective import Objective, judge
-from .proposer import CATALOGUE, Proposal, propose
+from .proposer import CATALOGUE, Proposal, inapplicable, propose
 
 LOG_FILE = EXPERIMENTS_DIR / "experiment_log.jsonl"
 CANDIDATE_DIR = EXPERIMENTS_DIR / "configs"
@@ -101,8 +101,15 @@ class ImprovementLoop:
             p: Proposal = prop["proposal"]
             tried.append(p.pid)
             cand_cfg = reset_thresholds(apply_patch(parent["config"], p.patch, name=f"iter{it + 1:02d}_{p.pid}"))
-            if cand_cfg.fingerprint(include_thresholds=False) == parent["config"].fingerprint(include_thresholds=False):
-                self.say(f"[skip] {p.pid}: no-op relative to the current parent")
+            why_noop = inapplicable(parent["config"], p.patch)
+            if why_noop is None and (cand_cfg.fingerprint(include_thresholds=False)
+                                     == parent["config"].fingerprint(include_thresholds=False)):
+                why_noop = "identical to the current parent"
+            if why_noop:
+                # not evaluated and not counted as an iteration, but logged so the skip is visible
+                self.say(f"[skip] {p.pid}: {why_noop}")
+                self._write({"iteration": None, "timestamp": now(), "kind": "skipped", "proposal_id": p.pid,
+                             "change": p.patch, "decision": "skipped", "explanation": why_noop})
                 continue
             it += 1
             self.say(f"[iter {it}] {p.pid} (targets {prop['category']}, {prop['count']} train failures)")
@@ -134,7 +141,7 @@ class ImprovementLoop:
         best.description = ("Selected by the train-only improvement loop; accepted changes: "
                             + (", ".join(accepted) if accepted else "none"))
         if final_path is not None:
-            save_config(best, final_path, header="Produced by `clauselens improve` (train data only). Thresholds were "
+            save_config(best, final_path, header="Produced by `lextrace improve` (train data only). Thresholds were "
                                                  "calibrated on train; do not edit by hand.")
-        self.say(f"best configuration -> {final_path}: accepted {accepted}")
+        self.say(f"best configuration -> configs/{final_path.name if final_path else None}: accepted {accepted}")
         return {"accepted": accepted, "tried": tried, "best": best, "best_summary": parent["summary"]}

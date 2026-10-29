@@ -40,7 +40,7 @@ def decide(signals: Dict[str, float], gates, n_candidates: int, enabled: bool = 
         return Decision(False, None)
     for g in gates:
         if g.threshold is None:
-            raise ValueError(f"gate {g.signal!r} has no threshold; calibrate on train first (`clauselens evaluate --split train`)")
+            raise ValueError(f"gate {g.signal!r} has no threshold; calibrate on train first (`lextrace evaluate --split train`)")
         value = signals.get(g.signal, 0.0)
         if value < g.threshold:
             if g.signal == "route_similarity":

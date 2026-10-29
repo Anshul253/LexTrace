@@ -83,7 +83,7 @@ def validate_tests(tests: Any) -> List[Dict[str, Any]]:
 
 def load_tests(path: Path = BENCHMARK_FILE) -> List[Dict[str, Any]]:
     if not path.exists():
-        raise DatasetError(f"benchmark file not found: {path}. Run `python -m clauselens prepare` first.")
+        raise DatasetError(f"benchmark file not found: {path}. Run `python -m lextrace prepare` first.")
     try:
         raw = json.loads(path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as e:

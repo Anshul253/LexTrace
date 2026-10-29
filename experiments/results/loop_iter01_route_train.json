@@ -1,0 +1,194 @@
+{
+  "config_name": "iter01_route",
+  "config_fingerprint": "7aead81dec1a",
+  "config": {
+    "name": "iter01_route",
+    "description": "",
+    "chunking": {
+      "strategy": "paragraph",
+      "size": 200,
+      "overlap": 0,
+      "min_size": 10
+    },
+    "routing": {
+      "mode": "hard",
+      "top_docs": 1,
+      "soft_weight": 0.5,
+      "head_chars": 300,
+      "query_part": "question"
+    },
+    "retrieval": {
+      "method": "bm25",
+      "candidates": 10,
+      "bm25_k1": 1.5,
+      "bm25_b": 0.75,
+      "tfidf_ngram_max": 1,
+      "tfidf_sublinear_tf": true,
+      "expansion": "none",
+      "tokenizer": {
+        "lowercase": true,
+        "stopwords": false,
+        "stemming": "none"
+      },
+      "dense": {
+        "model": "sentence-transformers/all-MiniLM-L6-v2",
+        "query_prefix": "",
+        "batch_size": 32
+      },
+      "hybrid": {
+        "components": [
+          "bm25",
+          "dense"
+        ],
+        "fusion": "rrf",
+        "weights": [
+          0.5,
+          0.5
+        ],
+        "rrf_k": 60
+      }
+    },
+    "rerank": {
+      "enabled": false,
+      "model": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+      "top_n": 32,
+      "weight": 1.0
+    },
+    "postprocess": {
+      "dedupe_overlaps": true,
+      "expand_chars": 0
+    },
+    "abstention": {
+      "enabled": true,
+      "gates": [
+        {
+          "signal": "top_score",
+          "threshold": 2.156573644108496
+        }
+      ],
+      "max_false_abstention": 0.34
+    },
+    "evaluation": {
+      "ks": [
+        1,
+        4,
+        16,
+        64
+      ],
+      "primary_k": 4
+    }
+  },
+  "split": "train",
+  "calibration": {
+    "thresholds": [
+      2.156573644108496
+    ],
+    "false_abstention": 0.3333333333333333,
+    "correct_abstention": 1.0,
+    "n_answerable": 3,
+    "n_unanswerable": 2
+  },
+  "summary": {
+    "n_answerable": 3,
+    "n_unanswerable": 2,
+    "ranking": {
+      "1": {
+        "precision": 0.5369107744107744,
+        "recall": 1.0,
+        "span_hit": 1.0,
+        "doc_hit": 1.0
+      },
+      "4": {
+        "precision": 0.25509439356377833,
+        "recall": 1.0,
+        "span_hit": 1.0,
+        "doc_hit": 1.0
+      },
+      "16": {
+        "precision": 0.25509439356377833,
+        "recall": 1.0,
+        "span_hit": 1.0,
+        "doc_hit": 1.0
+      },
+      "64": {
+        "precision": 0.25509439356377833,
+        "recall": 1.0,
+        "span_hit": 1.0,
+        "doc_hit": 1.0
+      }
+    },
+    "end_to_end": {
+      "1": {
+        "precision": 0.3803451178451178,
+        "recall": 0.6666666666666666
+      },
+      "4": {
+        "precision": 0.09852873699812174,
+        "recall": 0.6666666666666666
+      },
+      "16": {
+        "precision": 0.09852873699812174,
+        "recall": 0.6666666666666666
+      },
+      "64": {
+        "precision": 0.09852873699812174,
+        "recall": 0.6666666666666666
+      }
+    },
+    "primary_k": 4,
+    "recall_ci95": [
+      1.0,
+      1.0
+    ],
+    "mrr": 1.0,
+    "abstention": {
+      "n_answerable": 3,
+      "n_unanswerable": 2,
+      "false_abstentions": 1,
+      "correct_abstentions": 2,
+      "false_answers": 0,
+      "false_abstention_rate": 0.3333333333333333,
+      "correct_abstention_rate": 1.0,
+      "false_answer_rate": 0.0,
+      "correct_abstention_ci95": [
+        0.34237195288961925,
+        1.0
+      ],
+      "false_abstention_ci95": [
+        0.0614903152761605,
+        0.7923450448735121
+      ]
+    },
+    "abstention_by_category": {
+      "contract_not_in_corpus": {
+        "n": 2,
+        "correct": 2
+      }
+    },
+    "signal_auroc": {
+      "top_score": 1.0
+    },
+    "latency_ms": {
+      "mean": 0.7294999999999163,
+      "p50": 0.6688999999999723,
+      "p95": 0.860299999999814
+    },
+    "failure_counts": {
+      "hit": 2,
+      "false_abstention": 1
+    },
+    "misses_top1_in_header": {
+      "count": 1,
+      "of": 1,
+      "share": 1.0
+    },
+    "unanswerable_outcomes": {
+      "correct_abstention": 2,
+      "false_answer": 0
+    },
+    "eval_seconds": 0.007455300000000165,
+    "index_build_seconds": 0.0028383999999999077,
+    "n_chunks": 8
+  },
+  "created": "2026-10-29T17:26:41+00:00"
+}

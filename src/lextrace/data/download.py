@@ -46,7 +46,7 @@ def _fetch(rel: str, revision: str) -> Path:
     raise DownloadError(
         f"could not download {rel!r} from {REPO_ID}@{revision[:8]}: {last}\n"
         "Recovery: check network access to huggingface.co (or set HF_ENDPOINT to a mirror), then re-run "
-        "`python -m clauselens prepare`. Files can also be fetched manually from "
+        "`python -m lextrace prepare`. Files can also be fetched manually from "
         f"https://huggingface.co/datasets/{REPO_ID}/tree/{revision} into {RAW_DIR}.")
 
 

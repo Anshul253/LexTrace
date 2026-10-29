@@ -1,7 +1,7 @@
 import pytest
 
-from clauselens.abstention import calibrate, decide
-from clauselens.config import Gate
+from lextrace.abstention import calibrate, decide
+from lextrace.config import Gate
 
 
 def rows(vals, name="s"):

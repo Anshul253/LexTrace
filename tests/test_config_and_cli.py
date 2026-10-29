@@ -2,8 +2,8 @@ import pytest
 import yaml
 from typer.testing import CliRunner
 
-from clauselens import cli as cli_mod
-from clauselens.config import ConfigError, apply_patch, config_from_dict, load_config, save_config
+from lextrace import cli as cli_mod
+from lextrace.config import ConfigError, apply_patch, config_from_dict, load_config, save_config
 
 from .conftest import small_config
 
@@ -37,7 +37,7 @@ def test_patch_and_extends(tmp_path):
 
 @pytest.fixture
 def patched(monkeypatch, corpus, tmp_path):
-    import clauselens.workspace as ws
+    import lextrace.workspace as ws
 
     monkeypatch.setattr(ws, "corpus", lambda: corpus)
     path = tmp_path / "fx.yaml"

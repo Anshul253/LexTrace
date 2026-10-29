@@ -3,9 +3,9 @@ import shutil
 
 import pytest
 
-from clauselens.data.benchmark import DatasetError, assign_split
-from clauselens.data.unanswerable import CATEGORIES, file_sha256, load_unanswerable, split_counts
-from clauselens.paths import UNANSWERABLE_FILE, UNANSWERABLE_LOCK
+from lextrace.data.benchmark import DatasetError, assign_split
+from lextrace.data.unanswerable import CATEGORIES, file_sha256, load_unanswerable, split_counts
+from lextrace.paths import UNANSWERABLE_FILE, UNANSWERABLE_LOCK
 
 
 def test_frozen_set_matches_lock_and_has_at_least_30():

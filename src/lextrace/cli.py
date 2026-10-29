@@ -1,6 +1,6 @@
-"""ClauseLens command-line interface.
+"""LexTrace command-line interface.
 
-    python -m clauselens prepare | validate | build-index | query | evaluate | analyze | compare | improve | tables | test
+    python -m lextrace prepare | validate | build-index | query | evaluate | analyze | compare | improve | tables | test
 
 Exit codes: 0 ok (passages returned) | 10 abstained (not an error) | 2 invalid input | 3 data/config problem."""
 from __future__ import annotations
@@ -17,7 +17,7 @@ import typer
 from .config import ConfigError, load_config, save_config
 from .paths import CONFIG_DIR, EXPERIMENTS_DIR, ROOT
 
-app = typer.Typer(add_completion=False, help="ClauseLens - clause evidence retrieval over contracts.",
+app = typer.Typer(add_completion=False, help="LexTrace - clause evidence retrieval over contracts.",
                   no_args_is_help=True)
 
 EXIT_ABSTAINED, EXIT_INVALID, EXIT_DATA = 10, 2, 3
@@ -159,14 +159,17 @@ def evaluate(split: str = typer.Option("train", help="train (development) or tes
                    f"(e2e recall {s['end_to_end'][str(k)]['recall']:.3f})")
     a = s["abstention"]
     typer.echo(f"MRR {s['mrr']:.3f} | false abstention {a['false_abstentions']}/{a['n_answerable']} | correct abstention "
-               f"{a['correct_abstentions']}/{a['n_unanswerable']} | p95 {s['latency_ms']['p95']:.0f} ms | saved {path}")
+               f"{a['correct_abstentions']}/{a['n_unanswerable']} | p95 {s['latency_ms']['p95']:.0f} ms | saved {path.relative_to(ROOT).as_posix()}")
     if split == "test":
         n = record_test_run(res["config"], s, note or f"final reporting: {cfg.name}")
         typer.echo(f"test ledger now holds {n} evaluation(s)")
     if save_calibrated and res["calibration"] is not None:
-        target = CONFIG_DIR / f"{cfg.name}.yaml" if not Path(config).exists() else Path(config)
-        save_config(res["config"], target, header="thresholds calibrated on train by `clauselens evaluate --save-calibrated`")
-        typer.echo(f"calibrated thresholds written to {target}")
+        target = CONFIG_DIR / f"{cfg.name}_calibrated.yaml"
+        out_cfg = res["config"]
+        out_cfg.name = f"{cfg.name}_calibrated"
+        save_config(out_cfg, target, header=f"{cfg.name} with thresholds calibrated on train by "
+                                            "`lextrace evaluate --split train --save-calibrated`")
+        typer.echo(f"calibrated thresholds written to {target.relative_to(ROOT).as_posix()}")
 
 
 @app.command()

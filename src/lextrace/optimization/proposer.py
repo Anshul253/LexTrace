@@ -83,6 +83,25 @@ def failure_counts(summary: Dict) -> Dict[str, int]:
     return c
 
 
+def inapplicable(cfg, patch: Dict) -> Optional[str]:
+    """Why `patch` cannot change `cfg`'s behaviour (it touches a component the pipeline does not use), else None."""
+    r = patch.get("retrieval", {})
+    method = r.get("method", cfg.retrieval.method)
+    comps = set(r.get("hybrid", {}).get("components", cfg.retrieval.hybrid.components)) if method == "hybrid" else {method}
+    gates = {g["signal"] for g in patch.get("abstention", {}).get("gates", [])} or {g.signal for g in cfg.abstention.gates}
+    lexical = bool(comps & {"bm25", "tfidf"}) or bool(gates & {"bm25_norm", "query_coverage"})
+    if "hybrid" in r and "method" not in r and cfg.retrieval.method != "hybrid":
+        return "hybrid settings have no effect: the pipeline is not hybrid"
+    if ("tokenizer" in r or "bm25_k1" in r or "bm25_b" in r) and not lexical:
+        return "lexical settings have no effect: no lexical retriever or lexical gate is used"
+    if "dense" in r and "dense" not in comps and "dense_top_cosine" not in gates:
+        return "dense settings have no effect: no dense retriever is used"
+    ch = patch.get("chunking", {})
+    if "overlap" in ch and ch.get("strategy", cfg.chunking.strategy) != "fixed":
+        return "overlap only applies to fixed windows"
+    return None
+
+
 def propose(summary: Dict, tried: Sequence[str], catalogue: Sequence[Proposal] = CATALOGUE) -> Optional[Dict]:
     """Specific diagnostics first (header dominance), then failure categories by frequency."""
     counts = failure_counts(summary)

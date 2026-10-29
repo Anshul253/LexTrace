@@ -16,3 +16,6 @@ experiments/results/*_predictions.jsonl
 
 # confidential assignment material must never be committed
 *.pdf
+
+# local tooling
+.claude/

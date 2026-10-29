@@ -3,13 +3,13 @@ from dataclasses import replace
 
 import pytest
 
-from clauselens.data.benchmark import assign_split
-from clauselens.data.unanswerable import UnanswerableQuery
-from clauselens.evaluation.evaluator import SplitGuardError, calibrate_config, evaluate, run_queries
-from clauselens.optimization.loop import ImprovementLoop
-from clauselens.optimization.objective import Objective, judge
-from clauselens.optimization.proposer import Proposal, propose
-from clauselens.pipeline import Engine
+from lextrace.data.benchmark import assign_split
+from lextrace.data.unanswerable import UnanswerableQuery
+from lextrace.evaluation.evaluator import SplitGuardError, calibrate_config, evaluate, run_queries
+from lextrace.optimization.loop import ImprovementLoop
+from lextrace.optimization.objective import Objective, judge
+from lextrace.optimization.proposer import Proposal, propose
+from lextrace.pipeline import Engine
 
 from .conftest import fixture_queries, small_config
 

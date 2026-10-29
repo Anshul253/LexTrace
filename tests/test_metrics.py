@@ -3,7 +3,7 @@ import random
 
 import pytest
 
-from clauselens.evaluation import metrics as M
+from lextrace.evaluation import metrics as M
 
 G = [("d1", 100, 200)]
 

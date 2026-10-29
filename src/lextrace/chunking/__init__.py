@@ -73,8 +73,14 @@ def _segments(text: str, boundary: re.Pattern) -> List[Span]:
     return out
 
 
-def _pack(text: str, segments: List[Span], cfg: ChunkingConfig) -> List[Span]:
-    """Greedily merge consecutive segments up to cfg.size; split oversize segments into windows."""
+_HEADING_START = re.compile(r"(?:\d{1,2}(?:\.\d{1,2})*\.?[ \t]+\S|section[ \t]+\d|article[ \t]+[ivxlc\d]+)", re.I)
+
+
+def _pack(text: str, segments: List[Span], cfg: ChunkingConfig, keep_headings_apart: bool = False) -> List[Span]:
+    """Greedily merge consecutive segments up to cfg.size; split oversize segments into windows.
+
+    keep_headings_apart (clause strategy): a segment that starts with a section number/heading always starts a new
+    chunk, unless the current chunk is still shorter than min_size (e.g. a bare heading line)."""
     out: List[Span] = []
     cur: List[int] = []
     for s, e in segments:
@@ -84,7 +90,9 @@ def _pack(text: str, segments: List[Span], cfg: ChunkingConfig) -> List[Span]:
                 cur = []
             out.extend(fixed_windows(text, s, e, cfg.size, cfg.overlap))
             continue
-        if cur and (e - cur[0] <= cfg.size or cur[1] - cur[0] < cfg.min_size):
+        new_clause = keep_headings_apart and bool(_HEADING_START.match(text, s))
+        short = bool(cur) and cur[1] - cur[0] < cfg.min_size
+        if cur and e - cur[0] <= cfg.size and (short or not new_clause):
             cur[1] = e
         else:
             if cur:
@@ -105,7 +113,7 @@ def chunk_spans(text: str, cfg: ChunkingConfig) -> List[Span]:
         for s, e in _segments(text, _BLANK_LINE):
             sub = _segments(text[s:e], _HEADING)
             segs.extend((s + a, s + b) for a, b in sub)
-        return _pack(text, segs, cfg)
+        return _pack(text, segs, cfg, keep_headings_apart=True)
     raise ValueError(f"unknown chunking strategy {cfg.strategy!r}")
 
 

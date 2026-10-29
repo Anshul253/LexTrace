@@ -1,7 +1,7 @@
 import pytest
 
-from clauselens.chunking import fixed_windows, make_chunks
-from clauselens.config import ChunkingConfig
+from lextrace.chunking import fixed_windows, make_chunks
+from lextrace.config import ChunkingConfig
 
 from .conftest import DOCS
 
@@ -53,8 +53,16 @@ def test_clause_chunker_splits_at_headings():
     assert any(c.text.startswith("3. TERM") for c in chunks)
 
 
+def test_clause_chunks_differ_from_paragraph_chunks():
+    text = "1. Term. Two years.\n\n2. Law. New York.\n\nThe parties agree.\n\n3. Notices. In writing."
+    para = [c.text for c in make_chunks("d", text, ChunkingConfig(strategy="paragraph", size=800, min_size=5))]
+    clause = [c.text for c in make_chunks("d", text, ChunkingConfig(strategy="clause", size=800, min_size=5))]
+    assert len(para) == 1  # paragraphs are packed up to the size limit
+    assert clause == ["1. Term. Two years.", "2. Law. New York.\n\nThe parties agree.", "3. Notices. In writing."]
+
+
 def test_invalid_chunk_config():
-    from clauselens.config import ConfigError
+    from lextrace.config import ConfigError
 
     with pytest.raises(ConfigError):
         ChunkingConfig(strategy="fixed", size=100, overlap=100).validate()

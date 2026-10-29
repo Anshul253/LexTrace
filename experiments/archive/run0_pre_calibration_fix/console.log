@@ -1,12 +1,12 @@
-﻿[baseline] evaluating baseline on train (140 answerable, 29 unanswerable)
+[baseline] evaluating baseline on train (140 answerable, 29 unanswerable)
   recall@4=0.036 failures={'wrong_section': 125, 'partial_span': 13, 'hit': 2}
 [iter 1] route_hard (targets header_dominance, 121 train failures)
   -> accepted: recall@4 0.036 -> 0.317 (+0.281, P(gain)=1.00); all guardrails pass
 [iter 2] dense_minilm (targets wrong_section, 71 train failures)
-python.exe : E:\JioStar\clauselens\.venv\lib\site-packages\transformers\utils\hub.py:110: FutureWarning: Using 
+python.exe : E:\JioStar\lextrace\.venv\lib\site-packages\transformers\utils\hub.py:110: FutureWarning: Using 
 `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
 At line:1 char:369
-+ ... NG='utf-8'; & .\.venv\Scripts\python.exe -m clauselens improve --star ...
++ ... NG='utf-8'; & .\.venv\Scripts\python.exe -m lextrace improve --star ...
 +                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     + CategoryInfo          : NotSpecified: (E:\JioStar\clau..._HOME` instead.:String) [], RemoteException
     + FullyQualifiedErrorId : NativeCommandError

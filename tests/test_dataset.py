@@ -4,10 +4,10 @@ import random
 
 import pytest
 
-from clauselens.data.benchmark import (DatasetError, assign_split, load_tests, mini, split_queries, to_queries,
+from lextrace.data.benchmark import (DatasetError, assign_split, load_tests, mini, split_queries, to_queries,
                                        validate_tests)
-from clauselens.data.corpus import Corpus, read_contract
-from clauselens.data.validate import validate_offsets
+from lextrace.data.corpus import Corpus, read_contract
+from lextrace.data.validate import validate_offsets
 
 from .conftest import DOCS
 
@@ -119,7 +119,7 @@ def test_offset_validation_detects_mismatch(corpus):
 
 
 def test_corpus_missing_document(tmp_path):
-    from clauselens.data.corpus import MissingDocumentError
+    from lextrace.data.corpus import MissingDocumentError
 
     with pytest.raises(MissingDocumentError):
         Corpus.load(["cuad/nope.txt"], tmp_path)
