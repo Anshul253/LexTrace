@@ -187,11 +187,12 @@ proposer, a full fixture run of the loop, configuration loading, the CLI and the
 - First web-app load builds embeddings (cached under `artifacts/embeddings/`); later loads are fast.
 
 ## AI tool usage
-This project was developed with **Claude Code (Anthropic, model Claude Opus 5.5)** as an AI coding assistant. The
-assistant read the assignment and an earlier attempt of mine, proposed the architecture, wrote most of the
-implementation code, tests, the Streamlit interface and first drafts of this README and REPORT.md, ran the commands
-(dataset preparation, tests, the improvement loop, evaluations) and debugged failures (e.g. a calibration tie-break bug
-caught by a unit test). I directed the work, reviewed the design decisions and outputs, and am responsible for the
-submission. All reported numbers come from the saved run outputs in `experiments/`; none were written by hand.
-No AI model is used inside the system at run time. *(Reviewer note to self: edit this paragraph so it describes your
-own review and changes accurately before submitting.)*
+Claude Code (Anthropic) was used as an AI coding assistant throughout the development of this project. It was used
+to research technical approaches, understand relevant documentation, explore retrieval strategies and evaluate
+architectural choices, and it also generated most of the implementation code, the tests, the web interface and first
+drafts of this README and REPORT.md, ran the experiments, and helped debug failures. The overall approach,
+implementation decisions and evaluation methodology were reviewed throughout the process, and the generated code and
+experimental outputs were examined and validated. The project was developed through an iterative process of
+understanding requirements, implementing components, testing functionality and refining the system based on observed
+results. No AI model is used at runtime in the final retrieval pipeline. Reported evaluation results are based on the
+saved experiment outputs in the repository.

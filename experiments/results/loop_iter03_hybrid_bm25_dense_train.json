@@ -1,0 +1,238 @@
+{
+  "config_name": "iter03_hybrid_bm25_dense",
+  "config_fingerprint": "c6e25762418f",
+  "config": {
+    "name": "iter03_hybrid_bm25_dense",
+    "description": "fixed-500 chunks, BM25 (k1=1.5, b=0.75) on the full question, no routing, gate on raw top score",
+    "chunking": {
+      "strategy": "fixed",
+      "size": 500,
+      "overlap": 0,
+      "min_size": 40
+    },
+    "routing": {
+      "mode": "hard",
+      "top_docs": 1,
+      "soft_weight": 0.5,
+      "head_chars": 2000,
+      "query_part": "question"
+    },
+    "retrieval": {
+      "method": "hybrid",
+      "candidates": 64,
+      "bm25_k1": 1.5,
+      "bm25_b": 0.75,
+      "tfidf_ngram_max": 1,
+      "tfidf_sublinear_tf": true,
+      "expansion": "none",
+      "tokenizer": {
+        "lowercase": true,
+        "stopwords": false,
+        "stemming": "none"
+      },
+      "dense": {
+        "model": "sentence-transformers/all-MiniLM-L6-v2",
+        "query_prefix": "",
+        "batch_size": 32
+      },
+      "hybrid": {
+        "components": [
+          "bm25",
+          "dense"
+        ],
+        "fusion": "rrf",
+        "weights": [
+          0.5,
+          0.5
+        ],
+        "rrf_k": 60
+      }
+    },
+    "rerank": {
+      "enabled": false,
+      "model": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+      "top_n": 32,
+      "weight": 1.0
+    },
+    "postprocess": {
+      "dedupe_overlaps": true,
+      "expand_chars": 0
+    },
+    "abstention": {
+      "enabled": true,
+      "gates": [
+        {
+          "signal": "dense_top_cosine",
+          "threshold": 0.4221792221069336
+        }
+      ],
+      "max_false_abstention": 0.1
+    },
+    "evaluation": {
+      "ks": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64
+      ],
+      "primary_k": 4
+    }
+  },
+  "split": "train",
+  "calibration": {
+    "thresholds": [
+      0.4221792221069336
+    ],
+    "false_abstention": 0.1,
+    "correct_abstention": 0.4482758620689655,
+    "n_answerable": 140,
+    "n_unanswerable": 29
+  },
+  "summary": {
+    "n_answerable": 140,
+    "n_unanswerable": 29,
+    "ranking": {
+      "1": {
+        "precision": 0.17368542287844194,
+        "recall": 0.21541383029046174,
+        "span_hit": 0.3357142857142857,
+        "doc_hit": 1.0
+      },
+      "2": {
+        "precision": 0.1435833256755458,
+        "recall": 0.3479328797411184,
+        "span_hit": 0.5285714285714286,
+        "doc_hit": 1.0
+      },
+      "4": {
+        "precision": 0.09568545658777035,
+        "recall": 0.43119175379852726,
+        "span_hit": 0.6142857142857143,
+        "doc_hit": 1.0
+      },
+      "8": {
+        "precision": 0.06646256152476353,
+        "recall": 0.5835977435866553,
+        "span_hit": 0.7714285714285715,
+        "doc_hit": 1.0
+      },
+      "16": {
+        "precision": 0.04298503660453652,
+        "recall": 0.7190461647426629,
+        "span_hit": 0.9,
+        "doc_hit": 1.0
+      },
+      "32": {
+        "precision": 0.028091735439017853,
+        "recall": 0.8404984518360694,
+        "span_hit": 0.95,
+        "doc_hit": 1.0
+      },
+      "64": {
+        "precision": 0.020816408804195035,
+        "recall": 0.9239739146468131,
+        "span_hit": 0.9857142857142858,
+        "doc_hit": 1.0
+      }
+    },
+    "end_to_end": {
+      "1": {
+        "precision": 0.15113363141522562,
+        "recall": 0.17897557209016252
+      },
+      "2": {
+        "precision": 0.1293632485577881,
+        "recall": 0.3020265209740411
+      },
+      "4": {
+        "precision": 0.08661006535566661,
+        "recall": 0.376282343149456
+      },
+      "8": {
+        "precision": 0.060273801965435615,
+        "recall": 0.5190908857112708
+      },
+      "16": {
+        "precision": 0.03868083960921004,
+        "recall": 0.6456811133332565
+      },
+      "32": {
+        "precision": 0.02449540977546529,
+        "recall": 0.7497996936302289
+      },
+      "64": {
+        "precision": 0.017708630367945465,
+        "recall": 0.829997611113218
+      }
+    },
+    "primary_k": 4,
+    "recall_ci95": [
+      0.36459914761837725,
+      0.49865189776570906
+    ],
+    "mrr": 0.49853132606105544,
+    "abstention": {
+      "n_answerable": 140,
+      "n_unanswerable": 29,
+      "false_abstentions": 14,
+      "correct_abstentions": 13,
+      "false_answers": 16,
+      "false_abstention_rate": 0.1,
+      "correct_abstention_rate": 0.4482758620689655,
+      "false_answer_rate": 0.5517241379310345,
+      "correct_abstention_ci95": [
+        0.2841291114874579,
+        0.6245233293193238
+      ],
+      "false_abstention_ci95": [
+        0.06050550128408537,
+        0.160860223235108
+      ]
+    },
+    "abstention_by_category": {
+      "absent_clause": {
+        "n": 18,
+        "correct": 8
+      },
+      "contract_not_in_corpus": {
+        "n": 7,
+        "correct": 4
+      },
+      "out_of_scope": {
+        "n": 4,
+        "correct": 1
+      }
+    },
+    "signal_auroc": {
+      "dense_top_cosine": 0.645320197044335,
+      "top_score": 0.39716748768472904
+    },
+    "latency_ms": {
+      "mean": 32.03129230769221,
+      "p50": 31.63640000000001,
+      "p95": 36.58060000000063
+    },
+    "failure_counts": {
+      "false_abstention": 14,
+      "partial_span": 46,
+      "wrong_section": 48,
+      "hit": 32
+    },
+    "misses_top1_in_header": {
+      "count": 4,
+      "of": 108,
+      "share": 0.037037037037037035
+    },
+    "unanswerable_outcomes": {
+      "correct_abstention": 13,
+      "false_answer": 16
+    },
+    "eval_seconds": 5.6768250000000045,
+    "index_build_seconds": 0.20269440000000216,
+    "n_chunks": 2459
+  },
+  "created": "2026-10-29T17:36:29+00:00"
+}
