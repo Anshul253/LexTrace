@@ -22,11 +22,11 @@ def _gates(*signals: str) -> Dict:
 
 CATALOGUE: List[Proposal] = [
     # --- wrong document: the passage comes from a different contract than the one asked about
-    Proposal("route_hard", ("wrong_document",),
+    Proposal("route_hard", ("header_dominance", "wrong_document"),
              {"routing": {"mode": "hard", "top_docs": 1, "query_part": "question"}},
              "Questions name their contract; restrict search to the best-matching contract and rank clauses with the "
              "question text only, so party names stop pulling cover pages of other contracts."),
-    Proposal("route_soft", ("wrong_document",), {"routing": {"mode": "soft", "soft_weight": 0.5, "query_part": "question"}},
+    Proposal("route_soft", ("header_dominance", "wrong_document"), {"routing": {"mode": "soft", "soft_weight": 0.5, "query_part": "question"}},
              "Softer alternative to hard routing: boost chunks of contracts similar to the named title."),
     Proposal("route_hard_top2", ("wrong_document",), {"routing": {"mode": "hard", "top_docs": 2}},
              "If the router's first choice is sometimes wrong, searching the top two contracts may recover it."),
@@ -74,6 +74,9 @@ CATALOGUE: List[Proposal] = [
 ]
 
 
+HEADER_DOMINANCE_SHARE = 0.5
+
+
 def failure_counts(summary: Dict) -> Dict[str, int]:
     c = {k: v for k, v in summary["failure_counts"].items() if k != "hit"}
     c["false_answer"] = summary["unanswerable_outcomes"]["false_answer"]
@@ -81,8 +84,13 @@ def failure_counts(summary: Dict) -> Dict[str, int]:
 
 
 def propose(summary: Dict, tried: Sequence[str], catalogue: Sequence[Proposal] = CATALOGUE) -> Optional[Dict]:
+    """Specific diagnostics first (header dominance), then failure categories by frequency."""
     counts = failure_counts(summary)
-    for category, n in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0])):
+    ordered = sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
+    hd = summary.get("misses_top1_in_header", {})
+    if hd.get("share", 0.0) > HEADER_DOMINANCE_SHARE:
+        ordered = [("header_dominance", hd["count"])] + ordered
+    for category, n in ordered:
         if n == 0:
             continue
         for p in catalogue:

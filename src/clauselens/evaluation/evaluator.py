@@ -26,6 +26,9 @@ from ..pipeline import Engine
 from . import metrics as M
 
 
+HEADER_CHARS = 1500  # "opening text" region used by the header-dominance diagnostic
+
+
 class SplitGuardError(RuntimeError):
     """Raised when held-out data is about to be used outside a declared final evaluation."""
 
@@ -119,6 +122,12 @@ def summarize(rows: Dict[str, List[Dict]], cfg: PipelineConfig) -> Dict:
     lat = [r["latency_ms"] for r in a + u]
     out["latency_ms"] = {"mean": M.mean(lat), "p50": M.percentile(lat, 50), "p95": M.percentile(lat, 95)}
     out["failure_counts"] = dict(Counter(diagnose(r, cfg.evaluation.primary_k) for r in a))
+    # finer diagnostic: misses whose rank-1 passage is the contract's opening (title / parties / recitals) text,
+    # i.e. the question's contract name, not its legal concept, is driving the ranking
+    misses = [r for r in a if diagnose(r, cfg.evaluation.primary_k) != "hit"]
+    head = [r for r in misses if r["top"] and r["top"][0]["start"] < HEADER_CHARS]
+    out["misses_top1_in_header"] = {"count": len(head), "of": len(misses),
+                                    "share": len(head) / len(misses) if misses else 0.0}
     out["unanswerable_outcomes"] = {"correct_abstention": sum(r["abstained"] for r in u),
                                     "false_answer": sum(not r["abstained"] for r in u)}
     return out

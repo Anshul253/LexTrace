@@ -1,0 +1,21 @@
+# Baseline: the simplest reasonable end-to-end pipeline. Every later result is compared against it.
+# Fixed 500-character windows, BM25 over every chunk of every contract with the whole question as the query,
+# abstain when the rank-1 BM25 score is below a threshold calibrated on train (<= 10% false abstention).
+name: baseline
+description: "fixed-500 chunks, BM25 (k1=1.5, b=0.75) on the full question, no routing, gate on raw top score"
+chunking: {strategy: fixed, size: 500, overlap: 0, min_size: 40}
+routing: {mode: none}
+retrieval:
+  method: bm25
+  candidates: 64
+  bm25_k1: 1.5
+  bm25_b: 0.75
+  expansion: none
+  tokenizer: {lowercase: true, stopwords: false, stemming: none}
+rerank: {enabled: false}
+postprocess: {dedupe_overlaps: true, expand_chars: 0}
+abstention:
+  enabled: true
+  gates: [{signal: top_score, threshold: null}]
+  max_false_abstention: 0.10
+evaluation: {ks: [1, 2, 4, 8, 16, 32, 64], primary_k: 4}

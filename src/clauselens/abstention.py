@@ -6,8 +6,10 @@ the configured evidence threshold" - never "the contract has no such clause".
 
 Calibration (train only): thresholds are chosen so that at most `max_false_abstention` of the TRAIN answerable
 queries are refused; among threshold combinations meeting that budget, the one abstaining on the most TRAIN
-unanswerable queries wins (ties -> fewer false abstentions -> lower thresholds). With a single gate this reduces
-to the largest threshold within budget, i.e. it does not depend on the unanswerable labels at all."""
+unanswerable queries wins (ties -> the combination using more of the budget -> higher thresholds). With a single
+gate this reduces to the largest threshold within budget, i.e. it does not depend on the unanswerable labels.
+Rationale for the tie-break: there are few train unanswerable queries, so ties are common; the budget is the
+declared acceptable cost, and a higher threshold is more cautious on unseen unanswerable questions."""
 from __future__ import annotations
 
 import math
@@ -85,7 +87,7 @@ def calibrate(answerable: List[Dict[str, float]], unanswerable: List[Dict[str, f
         fa, ca = score(ths)
         if fa > budget:
             continue
-        key = (ca, -fa, [-t for t in ths])
+        key = (ca, fa, ths)  # most correct abstentions; ties -> spend the declared budget (more cautious on unseen)
         if best is None or key > best[0]:
             best = (key, ths, fa, ca)
     assert best is not None  # -inf thresholds always satisfy the budget
